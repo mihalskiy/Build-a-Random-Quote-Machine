@@ -1,14 +1,56 @@
-import React from 'react';
-import Article from './Article';
+import React, { Component } from 'react';
+//import Article from './Article';
 
-export default function ArticleList({ articles }) {
+class ArticleList extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            error: null,
+            isLoaded: false,
+            items: []
+        };
+    }
 
-    const articleElements = articles.map(article =>
-        <li key = {article.id}><Article article = {article}/></li>
-    )
-    return (
-        <ul>
-            {articleElements}
-        </ul>
-    )
+    componentDidMount() {
+        fetch("http://www.umori.li/api/get?site=bash.im&name=bash&num=100")
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        isLoaded: true,
+                        items: result.items
+                    });
+                },
+                // Note: it's important to handle errors here
+                // instead of a catch() block so that we don't swallow
+                // exceptions from actual bugs in components.
+                (error) => {
+                    this.setState({
+                        isLoaded: true,
+                        error
+                    });
+                }
+            )
+    }
+
+    render() {
+        const { error, isLoaded, items } = this.state;
+        if (error) {
+            return <div>Error: {error.message}</div>;
+        } else if (!isLoaded) {
+            return <div>Loading...</div>;
+        } else {
+            return (
+                <ul>
+                    {items.map(item => (
+                        <li>
+                            {item.name} {item.link} {item.elementPureHtml}
+                        </li>
+                    ))}
+                </ul>
+            );
+        }
+    }
 }
+
+export  default ArticleList
