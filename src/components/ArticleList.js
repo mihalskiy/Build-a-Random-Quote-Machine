@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+
 //import Article from './Article';
 
 class ArticleList extends Component {
@@ -12,13 +14,14 @@ class ArticleList extends Component {
     }
 
     componentDidMount() {
-        fetch("http://www.umori.li/api/get?site=bash.im&name=bash&num=100")
-            .then(res => res.json())
-            .then(
-                (result) => {
+        axios.get("https://api.myjson.com/bins/1c5so2")
+            //.then(res => res.json())
+            .then(result => {
+                const items = result.data;
+                console.log(items);
                     this.setState({
                         isLoaded: true,
-                        items: result.items
+                        items
                     });
                 },
                 // Note: it's important to handle errors here
