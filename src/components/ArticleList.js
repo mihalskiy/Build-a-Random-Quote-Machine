@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import './article.css';
 
 //import Article from './Article';
 
@@ -9,24 +10,24 @@ class ArticleList extends Component {
         this.state = {
             error: null,
             isLoaded: false,
-            items: []
+            items: [],
+            random: true
         };
     }
 
     componentDidMount() {
         axios.get("https://api.myjson.com/bins/1c5so2")
-            //.then(res => res.json())
             .then(result => {
                 const items = result.data;
-                console.log(items);
+                const random = items[Math.floor(Math.random()*items.length)];
+                    console.log(random);
                     this.setState({
                         isLoaded: true,
-                        items
+                        items,
+                        random,
                     });
+
                 },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
                 (error) => {
                     this.setState({
                         isLoaded: true,
@@ -36,21 +37,27 @@ class ArticleList extends Component {
             )
     }
 
+    onSort () {
+        console.log('sorted')
+        //state.items.sort();
+    }
+
     render() {
-        const { error, isLoaded, items } = this.state;
+        const { error, isLoaded, random } = this.state;
+        //const rand = Math.floor(Math.random() * items.length);
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
             return <div>Loading...</div>;
         } else {
             return (
-                <ul>
-                    {items.map(item => (
-                        <li>
-                            {item.name} {item.link} {item.elementPureHtml}
-                        </li>
-                    ))}
-                </ul>
+                <div className="article">
+                        <section className="articleList">
+                            <p className="articleTitle">{random.elementPureHtml}</p>
+                            <a href={random.site} target="_blank"><span className="articleAuthor">{random.desc}</span></a>
+                            <button onClick={this.onSort}>Новая цитата</button>
+                        </section>
+                </div>
             );
         }
     }
