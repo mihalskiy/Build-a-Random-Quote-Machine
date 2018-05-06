@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import './article.css';
 
+
+import Foundation from 'react-foundation';
+
+
 class ArticleList extends Component {
     constructor(props) {
         super(props);
@@ -56,21 +60,30 @@ class ArticleList extends Component {
             "#73A857"
         ];
         const rand = Math.floor(Math.random() * colors.length);
+        const randomBackground = {
+            background: colors[rand]
+        };
         const randomColor = {
-            background: colors[rand],
+            color: colors[rand]
         };
         console.log(colors[rand]);
+
+        const FoundationIcon = (props) => (
+            <i className={`fi-${props.iconName}`}></i>
+        );
+
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
             return <div>Loading...</div>;
         } else {
             return (
-                <div className="article" style={randomColor}>
+                <div className="article" style={randomBackground}>
+                    <i className="fi-burst-new"></i>
                         <section className="articleList" >
-                            <p className="articleTitle">{random.elementPureHtml}</p>
-                            <a href={random.site} target="_blank"><span className="articleAuthor">{random.desc}</span></a>
-                            <button onClick={this.onReload}>Новая цитата</button>
+                            <p className="articleTitle" style={randomColor}><i className="fas fa-quote-left"></i>{random.elementPureHtml}</p>
+                            <a href={random.site} target="_blank"><span className="articleAuthor" style={randomColor}>- {random.desc}</span></a>
+                            <button onClick={this.onReload} style={randomBackground}>Новая цитата</button>
                         </section>
                 </div>
             );
