@@ -13,7 +13,6 @@ class ArticleList extends Component {
             error: null,
             isLoaded: false,
             items: [],
-            random: true
         };
     }
 
@@ -43,6 +42,7 @@ class ArticleList extends Component {
         window.location.reload()
     }
 
+
     render() {
         const { error, isLoaded, random } = this.state;
         const colors = [
@@ -68,9 +68,9 @@ class ArticleList extends Component {
         };
         console.log(colors[rand]);
 
-        const FoundationIcon = (props) => (
-            <i className={`fi-${props.iconName}`}></i>
-        );
+        function createMarkup() {
+            return {__html: random.elementPureHtml};
+        }
 
         if (error) {
             return <div>Error: {error.message}</div>;
@@ -79,9 +79,8 @@ class ArticleList extends Component {
         } else {
             return (
                 <div className="article" style={randomBackground}>
-                    <i className="fi-burst-new"></i>
                         <section className="articleList" >
-                            <p className="articleTitle" style={randomColor}><i className="fas fa-quote-left"></i>{random.elementPureHtml}</p>
+                            <p className="articleTitle" style={randomColor} dangerouslySetInnerHTML={createMarkup()}></p>
                             <a href={random.site} target="_blank"><span className="articleAuthor" style={randomColor}>- {random.desc}</span></a>
                             <button onClick={this.onReload} style={randomBackground}>Новая цитата</button>
                         </section>
