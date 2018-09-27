@@ -17,25 +17,42 @@ class ArticleList extends Component {
     }
 
     componentDidMount() {
-        axios.get("https://api.myjson.com/bins/1c5so2")
+        /*axios.get("https://api.myjson.com/bins/1c5so2")
             .then(result => {
                 const items = result.data;
                 const random = items[Math.floor(Math.random()*items.length)];
                     console.log(random);
                     this.setState({
-                        isLoaded: true,
-                        items,
-                        random,
+                        isLoaded: true
                     });
-
                 },
                 (error) => {
                     this.setState({
                         isLoaded: true,
                         error
                     });
+                    console.error('wtf?', error)
                 }
-            )
+            )*/
+        fetch('https://api.myjson.com/bins/1c5so2')
+            .then((response) => {
+                if (response.status !== 200) {
+                    console.log('Problem in fetching');
+                    return;
+                }
+                    response
+                    .text()
+                    .then((data)=> {
+                        this.items = data;
+                        const random = this.items[Math.floor(Math.random()*this.items.length)];
+                        console.log(random);
+                        this.setState({
+                            isLoaded: true
+                        });
+                    console.log(data);
+                });
+            })
+
     }
 
     onReload () {
@@ -69,7 +86,9 @@ class ArticleList extends Component {
         console.log(colors[rand]);
 
         function createMarkup() {
-            return {__html: random.elementPureHtml};
+           /* if(this.items) {
+                return {__html: this.items.elementPureHtml};
+            }*/
         }
 
         if (error) {
@@ -80,8 +99,8 @@ class ArticleList extends Component {
             return (
                 <div className="article" style={randomBackground}>
                         <section className="articleList" >
-                            <p className="articleTitle" style={randomColor} dangerouslySetInnerHTML={createMarkup()}></p>
-                            <a href={random.site} target="_blank"><span className="articleAuthor" style={randomColor}>- {random.desc}</span></a>
+                            <p className="articleTitle" style={randomColor}>{this.items.elementPureHtml}</p>
+                            <a href={this.items.site} target="_blank"><span className="articleAuthor" style={randomColor}>- {this.items.desc}</span></a>
                             <button onClick={this.onReload} style={randomBackground}>Новая цитата</button>
                         </section>
                 </div>
